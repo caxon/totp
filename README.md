@@ -1,5 +1,4 @@
-README.md
-
+# TOTP SSH Automation
 
 **Warning: This is only tested on MacOS. It may work on Linux with the appropriate keychain alternative installed. It may work on Windows but it will require some tinkering.**
 
