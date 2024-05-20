@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e 
+
+SCRIPT_DIR=$(dirname -- "$( readlink -f -- "$0"; )")
+
+# check if conda/mamba is installed
+if command -v -- mamba > /dev/null 2>&1; then
+    CONDA_COMMAND=mamba
+elif command -v -- conda > /dev/null 2>&1; then
+    echo "conda command exists"
+    CONDA_COMMAND=conda
+else
+    echo "neither mamba/conda command is in path. Install mamba or conda and try again."
+    exit 1
+fi
+
+CONDA_ENV='totp'
+
+cd $SCRIPT_DIR/..
+
+$CONDA_COMMAND run -n $CONDA_ENV --no-capture-output python -m src.start_ssh_python

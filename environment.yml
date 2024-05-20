@@ -1,0 +1,11 @@
+name: totp
+channels:
+  - defaults
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.12
+  - pip:
+    - keyring==25.1
+    - pyotp==2.9
+    - pexpect==4.9
