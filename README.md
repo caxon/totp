@@ -18,7 +18,7 @@ I recommend putting it in `~/opt/totp`, but you can put it anywere that you put 
     ```
 5. Activate the environemnt `conda activate totp`
 6. Obtain your FASRC username, FASRC password, and FASRC TOTP token. Note: this is **not the same as the harvard-wide duo 2FA system!** See tutorial [here](./tutorial/OBTAIN_FASRC_TOKEN.md).
-7. Run the python script for the first time and it will prompt you to enter your information: `./scripts/start-ssh`
+7. Run the python script for the first time and it will prompt you to enter your information: `./scripts/start-ssh`. You may have to allow python access to your keychain - you can click Always Allow to avoid this prompt in the future,
 
 
 ## Running Steps: 
