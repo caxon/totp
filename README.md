@@ -70,7 +70,8 @@ E.g. `ssh`, `rsync`, `scp`, etc.
 
 * Most constants in the app are stored in `./src/constants.py`
 * You can uninstall the app, modify constants here, and re-run the install script
-* If you need to change your password or 2FA token, you can reset passwords without uninstalling the other components: from this repo's base directory run: `python -m src.cleanup_all -t password`. To set the passwords again, re-run `./scripts/install` and just enter "Yes" for the option to set passwords.
+* If you need to change your password or 2FA token, you can reset passwords without uninstalling the other components: from this repo's base directory run: `python -m src.cleanup_all -t password`. To set the passwords again, re-run `./scripts/install` and enter "YES" only for the password question.
+
 
 # Uninstallation
 
