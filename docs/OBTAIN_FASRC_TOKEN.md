@@ -10,9 +10,10 @@ How to obtain your FASRC secret 2FA token:
 7. Copy this value and provide it when prompted by the setup script. (if you wrote it down somewhere **destroy it afterwards/delete the file**)
 
 
->[!WARNING] THIS FASRC TOKEN IS A SECRET PASSWORD.
-If someone obtains this they might be able to access your account \
-Do not save it on your computer, share it with anyone, email it to yourself, etc.
+> [!CAUTION]
+> THIS FASRC TOKEN IS A SECRET PASSWORD.
+> If someone obtains this they might be able to access your account \
+> Do not save it on your computer, share it with anyone, email it to yourself, etc.
 
 
 

@@ -2,7 +2,8 @@
 
 Objective: Automatically connect to ssh servers which require 2FA for each connection.
 
->[!WARNING] This is only tested on MacOS. It may work on Linux but will require some tinkering.
+> [!WARNING] 
+> This is only tested on MacOS. It may work on Linux but will require some tinkering.
 
 # Setup Steps (MacOS)
 
@@ -31,7 +32,8 @@ Objective: Automatically connect to ssh servers which require 2FA for each conne
     ```
 6. Obtain your FASRC username, FASRC password, and FASRC TOTP token. [Link to tutorial](./docs/OBTAIN_FASRC_TOKEN.md).
 
-> [!NOTE] This is not the same as the Harvard-wide 2FA system, and is specific to FASRC.
+> [!NOTE]
+> This is not the same as the Harvard-wide 2FA system, and is specific to FASRC.
 
 7. Run the installation script and following the instructions. I recommend setting up passwords, aliases, and ssh config.
 
@@ -44,7 +46,8 @@ Objective: Automatically connect to ssh servers which require 2FA for each conne
    start-ssh
    ```
 
-> [!NOTE] MacOS may ask you if you want to let python access the keychain. You can click "allow always" to ignore this prompt in the future. Just note this will allow any python app to access the specific secrets you have authorized.
+> [!NOTE] 
+> MacOS may ask you if you want to let python access the keychain. You can click "allow always" to ignore this prompt in the future. Just note this will allow any python app to access the specific secrets you have authorized.
 
 
 # Running Steps
