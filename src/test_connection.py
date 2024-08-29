@@ -1,8 +1,9 @@
 import subprocess
 import os
 import logging
+from .passwords import get_ssh_user
 
-MAX_TIMOUT_CHECK_TUNNEL = 10  # seconds
+from .constants import MAX_TIMEOUT_CHECK_TUNNEL, DEFAULT_LOG_FORMAT, LOGIN_SSH_HOST
 
 
 def is_controlmaster_open(
@@ -12,6 +13,7 @@ def is_controlmaster_open(
 
     socket_filename = f"{ssh_dest}:{ssh_port}"
     socket_path = os.path.join(controlmaster_path, socket_filename)
+    logging.info("checking ssh tunnel at: {}".format(socket_path))
     args = [
         "ssh",
         "-o",
@@ -22,22 +24,24 @@ def is_controlmaster_open(
     ]
     try:
         completed_process = subprocess.run(args, timeout=10, capture_output=True)
-        logging.debug(f"Check tunnel process OUTPUT: { str(completed_process.stdout)}")
-        logging.debug(f"Check tunnel process ERROR: {str(completed_process.stderr) }")
+        logging.info(f"Check tunnel process OUTPUT: {str(completed_process.stdout)}")
+        logging.info(f"Check tunnel process ERROR: {str(completed_process.stderr)}")
     except subprocess.TimeoutExpired:
-        print(
-            f"Timeout expired. Unable to verify tunnel exists in under {MAX_TIMOUT_CHECK_TUNNEL} seconds"
+        logging.warning(
+            f"Timeout expired. Unable to verify tunnel exists in under {MAX_TIMEOUT_CHECK_TUNNEL} seconds"
         )
     if completed_process.returncode == 0:
         # code 0 means success
-        logging.info(f"Tunnel exists: {socket_path}")
+        logging.info("Tunnel is open")
         return True
     else:
-        logging.info(f"Tunnel does not exist: {socket_path}")
+        logging.info("Tunnel is not open")
         # anything else means the test failed
         return False
 
 
 if __name__ == "__main__":
-    ret_val = is_controlmaster_open("caxon@login.rc.fas.harvard.edu")
-    print(f"IS CONTROLMASTER OPEN? { 'True' if ret_val else 'False'} ")
+    logging.basicConfig(format=DEFAULT_LOG_FORMAT, level=logging.INFO)
+    ssh_user = get_ssh_user()
+    ret_val = is_controlmaster_open(f"{ssh_user}@{LOGIN_SSH_HOST}")
+    logging.warning(f"IS CONTROLMASTER OPEN? { 'True' if ret_val else 'False'} ")

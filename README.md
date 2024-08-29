@@ -1,61 +1,91 @@
 # TOTP SSH Automation
 
-**Warning: This is only tested on MacOS. It may work on Linux with the appropriate keychain alternative installed. It may work on Windows but it will require some tinkering.**
+Objective: Automatically connect to ssh servers which require 2FA for each connection.
 
-# One-time setup steps
+>[!WARNING] This is only tested on MacOS. It may work on Linux but will require some tinkering.
 
-1. Clone this repo (e.g. to `~/opt/totp`)
-I recommend putting it in `~/opt/totp`, but you can put it anywere that you put source files or projects:  
- a. Create ~/opt directory if it does not exist: `mkdir -p ~/opt`  
- b. Go to ~/opt directory: `cd ~/opt`  
- c. Clone the repo: `git clone git@github.com:caxon/totp.git` [SSH: preferred] or `https://github.com/caxon/totp.git` [HTTP: less github setup required]  
+# Setup Steps (MacOS)
 
-2. cd into the directory you just cloned: `cd totp`
-3. Install `conda` or `mamba` if not already installed (find instructions online e.g. [installing miniconda](https://docs.anaconda.com/free/miniconda/)). If you use mamba (preferred), alias or replace all conda commands with mamba.
-4. Create a conda environment:
+1. Clone this repo
+
+    ```bash
+    git clone https://github.com/caxon/totp.git
     ```
+
+2. cd into the directory you just cloned: 
+
+    ```bash
+    cd totp
+    ```
+
+3. Install `conda` or simlar. Many tutorials online e.g. [installing miniforge](https://github.com/conda-forge/miniforge?tab=readme-ov-file#unix-like-platforms-mac-os--linux)
+
+4. Create a conda environment:
+
+    ```bash
     conda env create -f environment.yml
     ```
-5. Activate the environemnt `conda activate totp`
-6. Obtain your FASRC username, FASRC password, and FASRC TOTP token. Note: this is **not the same as the harvard-wide duo 2FA system!** See tutorial [here](./tutorial/OBTAIN_FASRC_TOKEN.md).
-7. Run the python script for the first time and it will prompt you to enter your information: `./scripts/start-ssh`. You may have to allow python access to your keychain - you can click Always Allow to avoid this prompt in the future,
-
-
-## Running Steps: 
-1. Activate environemnt: `conda activate totp`
-2. run the python script: `python -m gen-totp`
-
-
-## [ADVANCED] Alernative Running Steps
-Why: Add the `start-ssh` script to your path so you can run it from anywhere
-1. make a `~/bin` folder: `mkdir -p ~/bin`
-2. add the bin folder to your shell's path. This varries depending on your shell (e.g. zsh vs bash). E.g. for zsh, open the zshrc file (`vi ~/.zshrc`). And add the following line near the top: 
-    ```bash
-    export PATH=/home/YOUR_USERNAME_HERE/bin:$PATH 
+5. Activate the environemnt 
     ```
-3. Restart your shell (or `source ~/.zhsrc` to update for the current shell)
-4. Now you can call `start-ssh` from anywhere. If it is successfull there will be no cli output, but you should not need a password to ssh to cannon.
+    conda activate totp
+    ```
+6. Obtain your FASRC username, FASRC password, and FASRC TOTP token. [Link to tutorial](./docs/OBTAIN_FASRC_TOKEN.md).
+
+> [!NOTE] This is not the same as the Harvard-wide 2FA system, and is specific to FASRC.
+
+7. Run the installation script and following the instructions. I recommend setting up passwords, aliases, and ssh config.
+
+    ```bash
+    ./scripts/install
+    ```
+
+8. Test the ssh connection
+   ```bash
+   start-ssh
+   ```
+
+> [!NOTE] MacOS may ask you if you want to let python access the keychain. You can click "allow always" to ignore this prompt in the future. Just note this will allow any python app to access the specific secrets you have authorized.
 
 
+# Running Steps
 
-## Other notes:
-- This will only work for the default login node by default (e.g. ssh user@login.rc.fas.harvard.edu) - if you want to log onto a specific node e.g. `boslogin` or `holylogin02` you will need to edit your ssh config or some files in this code [not officially supported] 
-- If you have to change your password, totp code, or login info, follow the section below for "Removing passwords set by this app", then run `start-ssh` again and it will re-prompt you for this information.
-- The ssh connection will occasionally timeout. You just need to run `start-ssh` again to fix.
+Once setup is done, you should have the following commands as aliases: `start-ssh`, `stop-ssh`, and `uninstall-totp-app`
+
+Run `start-ssh` from any terminal to create a connection. You will not have to manually enter your 2FA code or password. As long as this connection is open (even if the terminal is closed), any ssh command that uses your ssh config file will use the shared connection without re-authentication. 
+E.g. `ssh`, `rsync`, `scp`, etc.
+
+## Usage Notes
+
+* To close the shared ssh conncetion run the command, run `stop-ssh`.
+* The shared connection may time-out if your computer is disconnected for too long. To re-connect, just run `start-ssh` again.
+* By default `start-ssh` returns nothing if it is successful. To show more logs, enable the verbose argument: `start-ssh -v`
+* This will only work for the main login node by default (e.g. ssh user@login.rc.fas.harvard.edu) - if you want to log onto a specific node e.g. `boslogin` or `holylogin02` you will need to enter your password & 2FA token 
+
+## Advanced Configuration
+
+* Most constants in the app are stored in `./src/constants.py`
+* You can uninstall the app, modify constants here, and re-run the install script
+* If you need to change your password or 2FA token, you can reset passwords without uninstalling the other components: from this repo's base directory run: `python -m src.cleanup_all -t password`. To set the passwords again, re-run `./scripts/install` and just enter "Yes" for the option to set passwords.
 
 # Uninstallation
 
-## Removing passwords set by this app
-1. cd to the repo directory (totp)
-2. `conda activate totp`
-3. `python -m src.remove_passwords`
-If you run this multiple times, you will get errors, because the passwords have already been deleted.
+1. Run the following command to remove passwords, aliases, and ssh config sections set by this app
 
+    ```bash
+    ./scripts/install
+    ```
 
-## Deleting the totp conda environment
-1. If the totp environment is currently active, run `conda deactivate`
-2. Run the following command: `conda remove -n totp --all` and enter `y` to confirm.
+2. Remove the conad environment:
 
-You will need to re-install the conda environment (see "One-Time Setup  Steps" section above for these instructions).
+    If the `totp` environmetn is currently asctive, run:
 
+    ```bash
+    conda deactivate
+    ```
 
+    Then you can remove the environment with:
+    ```bash
+    conda remove -n totp --all
+    ```
+
+3. Finally, you can delete the `totp` folder

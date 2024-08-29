@@ -1,6 +1,9 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
+
+# This script will clean up everything which TOTP set during the initial setup steps
+# including: MacOS keychaing passwords, ~/.zshrc changes, and ~/.ssh/config changes
 
 # check if conda/mamba is installed
 if command -v -- mamba > /dev/null 2>&1; then
@@ -15,8 +18,8 @@ fi
 
 CONDA_ENV='totp'
 
-# run command from root of totp project folder
 SCRIPT_DIR=$(dirname -- "$( readlink -f -- "$0"; )")
+
 cd $SCRIPT_DIR/..
 
-$CONDA_COMMAND run -n $CONDA_ENV --no-capture-output python -m src.start_ssh "$@"
+$CONDA_COMMAND run -n $CONDA_ENV --no-capture-output python -m src.cleanup_all
