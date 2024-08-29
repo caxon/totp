@@ -34,7 +34,7 @@ TOTP = Time-based One-Time Password, often used with 2-factor-authentication flo
     ```
 6. Obtain your FASRC username, FASRC password, and FASRC TOTP token. [Link to tutorial](./docs/OBTAIN_FASRC_TOKEN.md).
 
-> [!NOTE]
+> [!IMPORTANT]
 > This is not the same as the Harvard-wide 2FA system, and is specific to FASRC.
 
 7. Run the installation script and following the instructions. I recommend setting up passwords, aliases, and ssh config.
