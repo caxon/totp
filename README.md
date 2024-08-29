@@ -1,6 +1,7 @@
 # TOTP SSH Automation
 
 Objective: Automatically connect to ssh servers which require 2FA for each connection.
+TOTP = Time-based One-Time Password
 
 > [!WARNING] 
 > This is only tested on MacOS. It may work on Linux but will require some tinkering.
