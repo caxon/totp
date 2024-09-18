@@ -1,17 +1,28 @@
-import subprocess
-import os
 import logging
-from .passwords import get_ssh_user
+import os
+import subprocess
+from pathlib import Path
 
-from .constants import MAX_TIMEOUT_CHECK_TUNNEL, DEFAULT_LOG_FORMAT, LOGIN_SSH_HOST
+from .constants import (
+    DEFAULT_LOG_FORMAT,
+    LOGIN_SSH_HOST,
+    MAX_TIMEOUT_CHECK_TUNNEL,
+    SSH_CONTROLMASTERS_FOLDER,
+)
+from .passwords import get_ssh_user
 
 
 def is_controlmaster_open(
-    ssh_dest, controlmaster_path="~/.ssh/controlmasters", ssh_port=22
+    ssh_dest, controlmaster_path=SSH_CONTROLMASTERS_FOLDER, ssh_port=22
 ):
     """Test if controlmaster tunnel is open"""
 
     socket_filename = f"{ssh_dest}:{ssh_port}"
+    controlmaster_path_full = Path(controlmaster_path).expanduser()
+    if not controlmaster_path_full.is_dir():
+        raise Exception(
+            f"Controlmaster folder does not exist. Try creating a folder at: {SSH_CONTROLMASTERS_FOLDER}"
+        )
     socket_path = os.path.join(controlmaster_path, socket_filename)
     logging.info("checking ssh tunnel at: {}".format(socket_path))
     args = [
@@ -24,8 +35,11 @@ def is_controlmaster_open(
     ]
     try:
         completed_process = subprocess.run(args, timeout=10, capture_output=True)
-        logging.info(f"Check tunnel process OUTPUT: {str(completed_process.stdout)}")
-        logging.info(f"Check tunnel process ERROR: {str(completed_process.stderr)}")
+        completed_process.stderr
+        out = str(completed_process.stdout)
+        err = str(completed_process.stderr)
+        logging.info(f"Check tunnel process OUTPUT: {out}")
+        logging.info(f"Check tunnel process ERROR: {err}")
     except subprocess.TimeoutExpired:
         logging.warning(
             f"Timeout expired. Unable to verify tunnel exists in under {MAX_TIMEOUT_CHECK_TUNNEL} seconds"

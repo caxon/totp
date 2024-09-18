@@ -8,14 +8,14 @@ from pathlib import Path
 
 from .constants import (
     DEFAULT_LOG_FORMAT,
-    TOTP_BLOCK_END,
-    TOTP_BLOCK_START,
     LOGIN_HOST_ALIAS,
     LOGIN_SSH_HOST,
     SSH_CONFIG_FILE,
+    SSH_CONTROLMASTERS_FOLDER,
+    TOTP_BLOCK_END,
+    TOTP_BLOCK_START,
 )
 from .passwords import get_ssh_user
-
 
 # aliases useful for f-strings (left, right brace)
 LBRACE = "{"
@@ -48,7 +48,7 @@ Host {LOGIN_HOST_ALIAS}
     ServerAliveInterval 60
     TCPKeepAlive no
     ControlMaster auto
-    ControlPath ~/.ssh/controlmasters/%r@%h:%p
+    ControlPath {SSH_CONTROLMASTERS_FOLDER}/%r@%h:%p
     ControlPersist yes
 
 """
@@ -144,6 +144,19 @@ def remove_ssh_config_section(config_file=SSH_CONFIG_FILE):
     logging.warning(
         f"Removed totp section and re-wrote to ssh config: {str(config_file_full)}"
     )
+
+
+def make_controlmasters_folder(controlmasters_folder=SSH_CONTROLMASTERS_FOLDER):
+    controlmasters_folder_full = Path(controlmasters_folder).expanduser()
+    try:
+        controlmasters_folder_full.mkdir()
+        logging.warning(
+            f"Created controlmasters folder at: {controlmasters_folder_full}"
+        )
+    except FileExistsError:
+        logging.warning(
+            f"Controlmasters folder already exists at: {controlmasters_folder_full}"
+        )
 
 
 if __name__ == "__main__":

@@ -1,5 +1,4 @@
 import argparse
-import getpass
 import logging
 import sys
 from io import StringIO
@@ -11,6 +10,7 @@ from .constants import (
     DEFAULT_LOG_LEVEL,
     LOGIN_SSH_HOST,
     PEXPECT_TIMEOUT_SECONDS,
+    SSH_CONTROLMASTERS_FOLDER,
 )
 from .passwords import (
     generate_otp,
@@ -34,7 +34,7 @@ def make_ssh_options(ssh_dest):
         "ServerAliveInterval": "60",  # prevent dropped connections by sending a ping every X seconds
         "IdentitiesOnly": "yes",  # Don't attempt key-based ssh auth (connection cannot use identies anyways)
         "ControlMaster": "yes",  # Use single control socket for SSH
-        "ControlPath": "~/.ssh/controlmasters/%r@%h:%p",  # Path to ssh control sockets
+        "ControlPath": f"{SSH_CONTROLMASTERS_FOLDER}/%r@%h:%p",  # Path to ssh control sockets
         "ControlPersist": "yes",  # Keep master connection open in the background
         "StrictHostKeyChecking": "accept-new",  # accept new ssh host, but DO NOT accept existing hosts where key has changed
         "NumberOfPasswordPrompts": "1",
@@ -110,7 +110,7 @@ def start_ssh_tunnel():
         idx = child.expect([pexpect.EOF, r".+ Permission denied"])
         if idx == 1:
             logging.error(
-                "Permission denied by ssh server. Double check passwords and try again"
+                "Permission denied by ssh server. Double check passwords and try again. Run ./scripts/install to update passwords."
             )
             sys.exit(1)
 

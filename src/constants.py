@@ -31,3 +31,6 @@ RC_FILE = "~/.zshrc"
 
 # ssh config file
 SSH_CONFIG_FILE = "~/.ssh/config"
+
+# ssh contorlmasters folder
+SSH_CONTROLMASTERS_FOLDER = "~/.ssh/controlmasters"

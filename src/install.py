@@ -1,11 +1,11 @@
 import logging
-import argparse
-from .passwords import prompt_and_store_passwords
-from .aliases import create_aliases
-from .ssh_config import add_ssh_config_section
-from .constants import RC_FILE, SSH_CONFIG_FILE
 import os
+from pathlib import Path
 
+from .aliases import create_aliases
+from .constants import RC_FILE, SSH_CONFIG_FILE, SSH_CONTROLMASTERS_FOLDER
+from .passwords import prompt_and_store_passwords
+from .ssh_config import add_ssh_config_section, make_controlmasters_folder
 
 if __name__ == "__main__":
     logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -35,4 +35,18 @@ if __name__ == "__main__":
     else:
         logging.warning('Did not input "yes". Skipping ssh config file setup')
 
-    logging.info("\nSETUP COMPLETE!")
+    # set up controlmasters folder if necessary
+    if not Path(SSH_CONTROLMASTERS_FOLDER).expanduser().is_dir():
+        user_input = input(
+            f"\nIt looks like the contorlmasters folder does not exist at {SSH_CONTROLMASTERS_FOLDER}. Would you like to create it? "
+        ).lower()
+        if user_input == "y" or user_input == "yes":
+            make_controlmasters_folder()
+        else:
+            logging.warning(
+                'Did not input "yes". Skipping controlmasters folder creation'
+            )
+
+    logging.info(
+        f"\nSETUP COMPLETE! To use commands (e.g. start-ssh), open a new shell or run: `source {RC_FILE}`"
+    )
