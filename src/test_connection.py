@@ -3,13 +3,13 @@ import os
 import subprocess
 from pathlib import Path
 
-from .constants import (
+from src.constants import (
     DEFAULT_LOG_FORMAT,
     LOGIN_SSH_HOST,
     MAX_TIMEOUT_CHECK_TUNNEL,
     SSH_CONTROLMASTERS_FOLDER,
 )
-from .passwords import get_ssh_user
+from src.passwords import get_ssh_user
 
 
 def is_controlmaster_open(

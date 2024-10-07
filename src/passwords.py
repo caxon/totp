@@ -4,7 +4,7 @@ import logging
 import keyring
 from keyring.errors import PasswordDeleteError
 import pyotp
-from .constants import (
+from src.constants import (
     PASSWORD_SERVICE_NAME,
     SECRET_TOKEN_SERVICE_NAME,
     SSH_USER_SERVICE_NAME,
@@ -34,7 +34,7 @@ def generate_otp():
 
 
 def prompt_and_store_passwords(override_username=None):
-    """Prompt user for passwords and store them in keychain"""
+    """Prompt user for passwords and store them in keychain. Return true if all passwords are set successfully"""
 
     local_username = getpass.getuser()
 
@@ -84,6 +84,9 @@ def prompt_and_store_passwords(override_username=None):
 
     logging.info("Saved passwords to keyring successfully. Done!")
 
+    # check that all passwords are set successfully
+    return are_all_passwords_set()
+
 
 def remove_passwords():
     local_username = getpass.getuser()
@@ -116,3 +119,13 @@ def remove_passwords():
 
     else:
         logging.info("Keyring passwords removed successfully.")
+
+
+def are_all_passwords_set():
+    """Check if all passwords are set. Return TRUE if any password is not set"""
+    attempts = [
+        get_totp_code() is not None,
+        get_rc_password() is not None,
+        get_ssh_user() is not None,
+    ]
+    return all(attempts)

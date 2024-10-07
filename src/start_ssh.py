@@ -5,21 +5,20 @@ from io import StringIO
 
 import pexpect
 
-from .constants import (
+from src.constants import (
     DEFAULT_LOG_FORMAT,
     DEFAULT_LOG_LEVEL,
     LOGIN_SSH_HOST,
     PEXPECT_TIMEOUT_SECONDS,
     SSH_CONTROLMASTERS_FOLDER,
 )
-from .passwords import (
+from src.passwords import (
     generate_otp,
     get_rc_password,
     get_ssh_user,
     get_totp_code,
-    prompt_and_store_passwords,
 )
-from .test_connection import is_controlmaster_open
+from src.test_connection import is_controlmaster_open
 
 
 def init_logging(log_level=DEFAULT_LOG_LEVEL):
@@ -27,7 +26,7 @@ def init_logging(log_level=DEFAULT_LOG_LEVEL):
     logging.basicConfig(format=DEFAULT_LOG_FORMAT, level=log_level)
 
 
-def make_ssh_options(ssh_dest):
+def build_ssh_options(ssh_dest):
     """Make argument list for the ssh command to create a tunnel"""
     ssh_config_dict = {
         "TCPKeepAlive": "no",  # Use ServerKeepAlive instead
@@ -92,7 +91,7 @@ def start_ssh_tunnel():
     # generated 6-digit one-time authentication token
     totp_otp = generate_otp()
 
-    subprocess_options = make_ssh_options(ssh_dest=ssh_dest)
+    subprocess_options = build_ssh_options(ssh_dest=ssh_dest)
 
     logging.info(
         f"Connecting to ssh with the following command: ssh {subprocess_options}"

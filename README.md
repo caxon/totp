@@ -72,6 +72,13 @@ E.g. `ssh`, `rsync`, `scp`, etc.
 * You can uninstall the app, modify constants here, and re-run the install script
 * If you need to change your password or 2FA token, you can reset passwords without uninstalling the other components: from this repo's base directory run: `python -m src.cleanup_all -t password`. To set the passwords again, re-run `./scripts/install` and enter "YES" only for the password question.
 
+## Troubleshooting
+
+* If ssh doesn't work after creating/modifying the ssh config, try restarting the ssh service. Run:
+```bash
+sudo launchctl stop com.openssh.sshd
+```
+
 
 # Uninstallation
 

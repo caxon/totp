@@ -2,15 +2,15 @@ import argparse
 import logging
 import sys
 
-from .aliases import remove_aliases
-from .constants import (
+from src.aliases import remove_aliases
+from src.constants import (
     DEFAULT_LOG_FORMAT,
     RC_FILE,
     SSH_CONFIG_FILE,
     SSH_CONTROLMASTERS_FOLDER,
 )
-from .passwords import remove_passwords
-from .ssh_config import remove_ssh_config_section
+from src.passwords import remove_passwords
+from src.ssh_config import remove_ssh_config_section
 
 
 def cleanup_all():

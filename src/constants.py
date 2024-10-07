@@ -29,8 +29,11 @@ MAX_TIMEOUT_CHECK_TUNNEL = 10
 # path to shell config file: .zshrc, .bashrc, etc.
 RC_FILE = "~/.zshrc"
 
+# ssh folder
+SSH_FOLDER = "~/.ssh"
+
 # ssh config file
-SSH_CONFIG_FILE = "~/.ssh/config"
+SSH_CONFIG_FILE = f"{SSH_FOLDER}/config"
 
 # ssh contorlmasters folder
-SSH_CONTROLMASTERS_FOLDER = "~/.ssh/controlmasters"
+SSH_CONTROLMASTERS_FOLDER = f"{SSH_FOLDER}/controlmasters"

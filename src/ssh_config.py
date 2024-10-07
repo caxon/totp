@@ -6,7 +6,7 @@ import re
 import sys
 from pathlib import Path
 
-from .constants import (
+from src.constants import (
     DEFAULT_LOG_FORMAT,
     LOGIN_HOST_ALIAS,
     LOGIN_SSH_HOST,
@@ -14,8 +14,9 @@ from .constants import (
     SSH_CONTROLMASTERS_FOLDER,
     TOTP_BLOCK_END,
     TOTP_BLOCK_START,
+    SSH_FOLDER,
 )
-from .passwords import get_ssh_user
+from src.passwords import get_ssh_user
 
 # aliases useful for f-strings (left, right brace)
 LBRACE = "{"
@@ -155,8 +156,42 @@ def make_controlmasters_folder(controlmasters_folder=SSH_CONTROLMASTERS_FOLDER):
         )
     except FileExistsError:
         logging.warning(
-            f"Controlmasters folder already exists at: {controlmasters_folder_full}"
+            f"Controlmasters folder already exists at: {controlmasters_folder_full}. This should not happen!"
         )
+    except Exception as e:
+        logging.error(f"Unexpected error ssh controlmasters folder. Error={e}")
+        return False
+    return True
+
+
+def make_ssh_folder(ssh_folder=SSH_FOLDER):
+    ssh_folder_full = Path(ssh_folder).expanduser()
+    try:
+        ssh_folder_full.mkdir()
+        logging.warning(f"Created ssh folder at: {ssh_folder_full}")
+    except FileExistsError:
+        raise Exception(
+            f"SSH folder already exists at: {ssh_folder_full}. This should not happen!"
+        )
+    except Exception as e:
+        logging.error(f"Unexpected error creating ssh folder. Error={e}")
+        return False
+    return True
+
+
+def make_ssh_config_file(ssh_config_file=SSH_CONFIG_FILE):
+    ssh_config_file_full = Path(ssh_config_file).expanduser()
+    try:
+        ssh_config_file_full.touch(exist_ok=False)
+        logging.warning(f"Created ssh config file at: {ssh_config_file_full}")
+    except FileExistsError:
+        raise Exception(
+            f"SSH config file already exists at: {ssh_config_file_full}. This should not happen!"
+        )
+    except Exception as e:
+        logging.error(f"Unexpected error creating ssh config file. Error={e}")
+        return False
+    return True
 
 
 if __name__ == "__main__":
