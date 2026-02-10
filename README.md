@@ -32,7 +32,10 @@ TOTP = Time-based One-Time Password, often used with 2-factor-authentication flo
     ```
     conda activate totp
     ```
-6. Obtain your FASRC username, FASRC password, and FASRC TOTP token. [Link to tutorial](./docs/OBTAIN_FASRC_TOKEN.md).
+6. Obtain your FASRC username, FASRC password, and FASRC TOTP secret token. [Link to tutorial](./docs/OBTAIN_FASRC_TOKEN.md).
+
+    When the installer asks for your TOTP token, enter the long base32 secret key from the FASRC 2FA page (red text under "Additional Information and Hints").
+    Do **not** enter a temporary 6-digit code.
 
 > [!IMPORTANT]
 > This is not the same as the Harvard-wide 2FA system, and is specific to FASRC.
@@ -78,6 +81,7 @@ E.g. `ssh`, `rsync`, `scp`, etc.
 ```bash
 sudo launchctl stop com.openssh.sshd
 ```
+* If `start-ssh` fails with `Non-base32 digit found`, the saved TOTP secret is malformed. Re-run `./scripts/install`, choose to update passwords, and paste only the raw base32 secret token (not the full `otpauth://...` URL).
 
 
 # Uninstallation

@@ -140,6 +140,10 @@ if __name__ == "__main__":
 
     ## set up passwords
     ## MANDATORY
+    logging.warning(
+        'When prompted for "totp secret token", enter the long base32 secret from '
+        "https://two-factor.rc.fas.harvard.edu/ (not a 6-digit OTP code)."
+    )
     if all_passwords_set:
         logging.warning("---\n" + "Passwords already appear to be set.")
         user_input = input("Would you like to update them? (Y/N): ").lower()

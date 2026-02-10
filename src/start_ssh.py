@@ -89,7 +89,15 @@ def start_ssh_tunnel():
         logging.info("Creating new ssh tunnel")
 
     # generated 6-digit one-time authentication token
-    totp_otp = generate_otp()
+    try:
+        totp_otp = generate_otp()
+    except ValueError as e:
+        logging.error(str(e))
+        logging.error(
+            "Unable to generate OTP from saved keychain token. Run ./scripts/install "
+            "and update passwords."
+        )
+        sys.exit(1)
 
     subprocess_options = build_ssh_options(ssh_dest=ssh_dest)
 

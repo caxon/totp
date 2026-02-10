@@ -7,7 +7,9 @@ How to obtain your FASRC secret 2FA token:
 4. You will be take to a page with the title: **Openauth: 2-Factor Authentication**
 5. Scroll down to the bottom of the page to the **Additional Information and Hints** header
 6. Your secret token should be in red text near the bottom of the page. See the embedded image below for more directions
-7. Copy this value and provide it when prompted by the setup script. (if you wrote it down somewhere **destroy it afterwards/delete the file**)
+7. Copy this value and provide it when prompted by the setup script.
+   This value is the long-lived secret key (base32 text), not the temporary 6-digit OTP code shown in an authenticator app.
+   (if you wrote it down somewhere **destroy it afterwards/delete the file**)
 
 
 > [!CAUTION]

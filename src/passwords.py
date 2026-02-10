@@ -1,5 +1,8 @@
 import getpass
 import logging
+import re
+from binascii import Error as BinasciiError
+from urllib.parse import parse_qs, urlparse
 
 import keyring
 from keyring.errors import PasswordDeleteError
@@ -11,6 +14,7 @@ from src.constants import (
 )
 
 username = getpass.getuser()
+BASE32_ALPHABET = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=")
 
 
 def get_totp_code():
@@ -25,12 +29,60 @@ def get_ssh_user():
     return keyring.get_password(SSH_USER_SERVICE_NAME, username)
 
 
+def normalize_totp_secret(raw_secret):
+    """Normalize TOTP input into a plain base32 secret string."""
+    if raw_secret is None:
+        return None
+
+    secret = raw_secret.strip().strip('"').strip("'")
+
+    # Accept full otpauth URIs by extracting the secret query parameter.
+    if secret.lower().startswith("otpauth://"):
+        parsed = urlparse(secret)
+        uri_secret = parse_qs(parsed.query).get("secret", [None])[0]
+        if uri_secret is not None:
+            secret = uri_secret
+
+    # Ignore spacing/group separators commonly used when displaying secrets.
+    secret = re.sub(r"[\s-]+", "", secret).upper()
+
+    return secret
+
+
+def validate_totp_secret(raw_secret):
+    """Return normalized secret or raise ValueError with a user-facing message."""
+    secret = normalize_totp_secret(raw_secret)
+
+    if not secret:
+        raise ValueError("TOTP secret is empty after normalization.")
+
+    invalid_chars = sorted({char for char in secret if char not in BASE32_ALPHABET})
+    if invalid_chars:
+        preview = "".join(invalid_chars[:10])
+        raise ValueError(
+            "TOTP secret contains invalid characters for base32 decoding: "
+            f"{preview}"
+        )
+
+    try:
+        pyotp.TOTP(secret).byte_secret()
+    except (BinasciiError, TypeError, ValueError) as e:
+        raise ValueError(
+            "TOTP secret is not valid base32. Re-run ./scripts/install and update "
+            "passwords with your raw secret token."
+        ) from e
+
+    return secret
+
+
 def generate_otp():
     SECRET_totp_code = get_totp_code()
     if SECRET_totp_code is None:
         return None
 
-    return pyotp.TOTP(SECRET_totp_code).now()
+    normalized_totp_code = validate_totp_secret(SECRET_totp_code)
+
+    return pyotp.TOTP(normalized_totp_code).now()
 
 
 def prompt_and_store_passwords(override_username=None):
@@ -61,19 +113,24 @@ def prompt_and_store_passwords(override_username=None):
 
     ### TOTP SECRET CODE
     user_input_token = getpass.getpass(
-        "Enter your totp secret token (will be stored locally and encrypted in keyring): "
+        "Enter your TOTP secret token (long base32 key from FASRC page, not the 6-digit code; stored locally in keyring): "
     )
 
-    if len(user_input_token) < 10:
+    try:
+        normalized_user_input_token = validate_totp_secret(user_input_token)
+    except ValueError as e:
+        raise Exception(f"Invalid TOTP token: {e}") from e
+
+    if len(normalized_user_input_token) < 10:
         raise Exception(
-            "Token is too short to be valid. Should be ~16 charcters. Exiting script."
+            "Token is too short to be valid. Should be ~16 characters. Exiting script."
         )
 
     # Save all passwords to keyring
     try:
         keyring.set_password(PASSWORD_SERVICE_NAME, local_username, user_input_pass)
         keyring.set_password(
-            SECRET_TOKEN_SERVICE_NAME, local_username, user_input_token
+            SECRET_TOKEN_SERVICE_NAME, local_username, normalized_user_input_token
         )
         keyring.set_password(
             SSH_USER_SERVICE_NAME, local_username, user_input_ssh_uname
