@@ -2,26 +2,9 @@
 
 set -e
 
-CONDA_ENV='totp'
-
-# check if conda/mamba is installed and can find the target environment
-_can_find_env() {
-    "$1" env list 2>/dev/null | grep -qw "$CONDA_ENV"
-}
-
-CONDA_COMMAND=""
-for cmd in mamba conda; do
-    if command -v -- "$cmd" > /dev/null 2>&1 && _can_find_env "$cmd"; then
-        CONDA_COMMAND="$cmd"
-        break
-    fi
-done
-
-if [ -z "$CONDA_COMMAND" ]; then
-    echo "Error: Could not find the '$CONDA_ENV' environment with either mamba or conda."
-    echo "Make sure the environment exists (conda env create -f environment.yml) and try again."
-    exit 1
-fi
+# detect conda/mamba and set CONDA_COMMAND and CONDA_ENV
+SCRIPT_DIR=$(dirname -- "$( readlink -f -- "$0"; )")
+source "$SCRIPT_DIR/_detect_conda.sh"
 
 # run command from root of totp project folder
 SCRIPT_DIR=$(dirname -- "$( readlink -f -- "$0"; )")
