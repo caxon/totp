@@ -1,5 +1,5 @@
 # this file has to be run from the totp root directory. The bash script: $totp_dir/scripts/create-aliases will make sure of that
-# and that is the recommend way to run this.
+# and that is the recommended way to run this.
 import logging
 import os
 import re
@@ -38,7 +38,7 @@ def check_for_alias_block(filetext: str, delete_and_return=False):
     True if the alias block is defined in the text
     False if the alias block does not exist
 
-    delete (deafult=False): if True, remove everything between the start and end of the alias block, and return the new string
+    delete (default=False): if True, remove everything between the start and end of the alias block, and return the new string
     """
 
     pattern = rf"^{TOTP_BLOCK_START}\n(.+?\n){LBRACE}0,10{RBRACE}{TOTP_BLOCK_END}$(\n)*"
@@ -52,7 +52,7 @@ def check_for_alias_block(filetext: str, delete_and_return=False):
         # string found, no need to do anything else
         return True
 
-    # return the original filetext without the mached section
+    # return the original filetext without the matched section
     # delete_and_return is True
     subbed_text = re.sub(pattern, "", filetext, flags=re.MULTILINE)
     return subbed_text

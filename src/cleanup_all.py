@@ -19,7 +19,7 @@ def cleanup_all():
     )
 
     logging.warning(
-        f"This includes removing: \n\t- ssh password, ssh username, and secret TOTP token from the MacOS keychain\n\t- aliases for start-ssh and stop-ssh set in {RC_FILE}\n\t- blocks in ~/.ssh/config set by this app"
+        f"This includes removing: \n\t- ssh password, ssh username, and secret TOTP token from the macOS Keychain\n\t- aliases for start-ssh and stop-ssh set in {RC_FILE}\n\t- blocks in ~/.ssh/config set by this app"
     )
     user_input = input("Are you sure you would like to continue? (Y/N): ").lower()
     if user_input == "y" or user_input == "yes":
@@ -42,11 +42,11 @@ def cleanup_all():
     remove_ssh_config_section()
 
     logging.warning(
-        f"You can optionally delete the ssh controlmasters folder at :{SSH_CONTROLMASTERS_FOLDER}"
+        f"You can optionally delete the ssh controlmasters folder at: {SSH_CONTROLMASTERS_FOLDER}"
     )
-    logging.warning("Succesfully cleaned up TOTP app installation changes")
+    logging.warning("Successfully cleaned up TOTP app installation changes")
     logging.warning(
-        "You can now deactive (if active) and remove the conda environment: conda deactivate && conda remove -n totp --all"
+        "You can now deactivate (if active) and remove the conda environment: conda deactivate && conda remove -n totp --all"
     )
     logging.warning(
         "Finally you can delete totp repository folder from your computer to complete removal"
