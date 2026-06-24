@@ -44,7 +44,7 @@ if __name__ == "__main__":
         "This script will ask you if you want to change various settings on your system to make it easier to run the TOTP app.\n"
     )
     logging.warning(
-        "If you aren't sure what the a question means, you should probably enter Y and allow the install script to make each change.\n"
+        "If you aren't sure what a question means, you should probably enter Y and allow the install script to make each change.\n"
     )
 
     ## Check if important files exist
@@ -61,7 +61,7 @@ if __name__ == "__main__":
         logging.warning(
             "---\n"
             + f"SSH folder does not exist ({SSH_FOLDER}).\n"
-            + "This is mandatory to setup the TOTP app.\n"
+            + "This is mandatory to set up the TOTP app.\n"
             + 'If you are using a non-standard ssh folder, you can update SSH_FOLDER in "$TOTP/src/constants.py"'
         )
         user_input = input("Would you like to set up the ssh folder? (Y/N): ").lower()
@@ -81,7 +81,7 @@ if __name__ == "__main__":
         logging.warning(
             "---\n"
             + f"SSH config file does not exist ({SSH_CONFIG_FILE}).\n"
-            + "This is mandatory to setup the TOTP app.\n"
+            + "This is mandatory to set up the TOTP app.\n"
             + 'If you are using a non-standard ssh config file, you can update SSH_CONFIG_FILE in "$TOTP/src/constants.py".'
         )
         user_input = input(
@@ -103,7 +103,7 @@ if __name__ == "__main__":
         logging.warning(
             "---\n"
             + f"SSH controlmasters folder does not exist ({SSH_CONTROLMASTERS_FOLDER}).\n"
-            + "This is required to setup the TOTP app.\n"
+            + "This is required to set up the TOTP app.\n"
             + 'If you are using a non-standard controlmasters folder, you can update SSH_CONTROLMASTERS_FOLDER in "$TOTP/src/constants.py".'
         )
         user_input = input(
@@ -113,7 +113,7 @@ if __name__ == "__main__":
             controlmasters_folder_exists = make_controlmasters_folder()
         else:
             logging.error(
-                'Did not input "yes". Controlmastesr folder required to continue setup. Exiting'
+                'Did not input "yes". Controlmasters folder required to continue setup. Exiting'
             )
             sys.exit(1)
     else:
@@ -128,7 +128,7 @@ if __name__ == "__main__":
             + "If you use a different shell .rc file, update constant RC_FILE in file $TOTP/src/constants.py.\n"
             + "This is optional, but required if you want to set aliases (recommended)."
         )
-        user_input = input("Would you like create a shell config file? (Y/N): ").lower()
+        user_input = input("Would you like to create a shell config file? (Y/N): ").lower()
         if user_input == "y" or user_input == "yes":
             rc_file_exists = make_rc_file()
         else:

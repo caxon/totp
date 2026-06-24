@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # This script will clean up everything which TOTP set during the initial setup steps
-# including: MacOS keychaing passwords, ~/.zshrc changes, and ~/.ssh/config changes
+# including: macOS Keychain passwords, ~/.zshrc changes, and ~/.ssh/config changes
 
 # detect conda/mamba and set CONDA_COMMAND and CONDA_ENV
 SCRIPT_DIR=$(dirname -- "$( readlink -f -- "$0"; )")

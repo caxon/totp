@@ -22,7 +22,7 @@ from src.test_connection import is_controlmaster_open
 
 
 def init_logging(log_level=DEFAULT_LOG_LEVEL):
-    # set up logigng (default is warn or higher)
+    # set up logging (default is warn or higher)
     logging.basicConfig(format=DEFAULT_LOG_FORMAT, level=log_level)
 
 
@@ -31,7 +31,7 @@ def build_ssh_options(ssh_dest):
     ssh_config_dict = {
         "TCPKeepAlive": "no",  # Use ServerKeepAlive instead
         "ServerAliveInterval": "60",  # prevent dropped connections by sending a ping every X seconds
-        "IdentitiesOnly": "yes",  # Don't attempt key-based ssh auth (connection cannot use identies anyways)
+        "IdentitiesOnly": "yes",  # Don't attempt key-based ssh auth (connection cannot use identities anyway)
         "ControlMaster": "yes",  # Use single control socket for SSH
         "ControlPath": f"{SSH_CONTROLMASTERS_FOLDER}/%r@%h:%p",  # Path to ssh control sockets
         "ControlPersist": "yes",  # Keep master connection open in the background
@@ -42,7 +42,7 @@ def build_ssh_options(ssh_dest):
     ssh_positional_options = [
         "-F",
         "none",  # Do not read from SSH config file (config_file = None)
-        "-X",  # enable X11 forwarding (if you want to run graphical applicaitons over tunnel connection)
+        "-X",  # enable X11 forwarding (if you want to run graphical applications over tunnel connection)
         "-N",  # do not execute remote commands (just open tunnel)
         # "-C",  # not sure if compression helps - since file is encrypted and connection is likely very fast
     ]
@@ -62,12 +62,12 @@ def build_ssh_options(ssh_dest):
 
 
 def start_ssh_tunnel():
-    # get passwords from MacOS Keychain
+    # get passwords from macOS Keychain
     SECRET_totp_code = get_totp_code()
     SECRET_rc_password = get_rc_password()
     SECRET_ssh_user = get_ssh_user()
 
-    # if at least one of the secrets is missing then offer to initilaize them
+    # if at least one of the secrets is missing then offer to initialize them
     if (
         SECRET_totp_code is None
         or SECRET_rc_password is None
@@ -79,7 +79,7 @@ def start_ssh_tunnel():
 
     ssh_dest = f"{SECRET_ssh_user}@{LOGIN_SSH_HOST}"
 
-    # test if controlmaster is alrady running
+    # test if controlmaster is already running
 
     running = is_controlmaster_open(ssh_dest=ssh_dest)
     if running:
@@ -88,7 +88,7 @@ def start_ssh_tunnel():
     else:
         logging.info("Creating new ssh tunnel")
 
-    # generated 6-digit one-time authentication token
+    # generate 6-digit one-time authentication token
     try:
         totp_otp = generate_otp()
     except ValueError as e:
@@ -123,7 +123,7 @@ def start_ssh_tunnel():
 
     except pexpect.TIMEOUT as e:
         logging.error(
-            "Timed out waitings for specific ssh response. Try again with --verbose for more information."
+            "Timed out waiting for specific ssh response. Try again with --verbose for more information."
         )
         logging.info("STDOUT from ssh process:\n\n{}".format(logfile_read.getvalue()))
         logging.info("FULL ERROR TEXT:\n\n{}".format(e))

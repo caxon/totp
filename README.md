@@ -1,13 +1,13 @@
 # TOTP SSH Automation
 
-Objective: Automatically connect to ssh servers which require 2FA for each connection.
+Objective: Automatically connect to SSH servers which require 2FA for each connection.
 
 TOTP = Time-based One-Time Password, often used with 2-factor-authentication flows.
 
 > [!WARNING] 
-> This is only tested on MacOS. It may work on Linux but will require some tinkering.
+> This is only tested on macOS. It may work on Linux but will require some tinkering.
 
-# Setup Steps (MacOS)
+# Setup Steps (macOS)
 
 1. Clone this repo
 
@@ -21,14 +21,14 @@ TOTP = Time-based One-Time Password, often used with 2-factor-authentication flo
     cd totp
     ```
 
-3. Install `conda` or simlar. Many tutorials online e.g. [installing miniforge](https://github.com/conda-forge/miniforge?tab=readme-ov-file#unix-like-platforms-mac-os--linux)
+3. Install `conda` or similar. Many tutorials online e.g. [installing miniforge](https://github.com/conda-forge/miniforge?tab=readme-ov-file#unix-like-platforms-mac-os--linux)
 
 4. Create a conda environment:
 
     ```bash
     conda env create -f environment.yml
     ```
-5. Activate the environemnt 
+5. Activate the environment
     ```
     conda activate totp
     ```
@@ -40,34 +40,34 @@ TOTP = Time-based One-Time Password, often used with 2-factor-authentication flo
 > [!IMPORTANT]
 > This is not the same as the Harvard-wide 2FA system, and is specific to FASRC.
 
-7. Run the installation script and following the instructions. I recommend setting up passwords, aliases, and ssh config.
+7. Run the installation script and follow the instructions. I recommend setting up passwords, aliases, and SSH config.
 
     ```bash
     ./scripts/install
     ```
 
-8. Test the ssh connection
+8. Test the SSH connection
    ```bash
    start-ssh
    ```
 
 > [!NOTE] 
-> MacOS may ask you if you want to let python access the keychain. You can click "allow always" to ignore this prompt in the future. Just note this will allow any python app to access the specific secrets you have authorized.
+> macOS may ask you if you want to let Python access the keychain. You can click "Allow Always" to ignore this prompt in the future. Just note this will allow any Python app to access the specific secrets you have authorized.
 
 
 # Running Steps
 
 Once setup is done, you should have the following commands as aliases: `start-ssh`, `stop-ssh`, and `uninstall-totp-app`
 
-Run `start-ssh` from any terminal to create a connection. You will not have to manually enter your 2FA code or password. As long as this connection is open (even if the terminal is closed), any ssh command that uses your ssh config file will use the shared connection without re-authentication. 
+Run `start-ssh` from any terminal to create a connection. You will not have to manually enter your 2FA code or password. As long as this connection is open (even if the terminal is closed), any SSH command that uses your SSH config file will use the shared connection without re-authentication.
 E.g. `ssh`, `rsync`, `scp`, etc.
 
 ## Usage Notes
 
-* To close the shared ssh conncetion run the command, run `stop-ssh`.
-* The shared connection may time-out if your computer is disconnected for too long. To re-connect, just run `start-ssh` again.
+* To close the shared SSH connection, run `stop-ssh`.
+* The shared connection may time out if your computer is disconnected for too long. To reconnect, just run `start-ssh` again.
 * By default `start-ssh` returns nothing if it is successful. To show more logs, enable the verbose argument: `start-ssh -v`
-* This will only work for the main login node by default (e.g. ssh user@login.rc.fas.harvard.edu) - if you want to log onto a specific node e.g. `boslogin` or `holylogin02` you will need to enter your password & 2FA token 
+* This will only work for the main login node by default (e.g. `ssh user@login.rc.fas.harvard.edu`) - if you want to log onto a specific node e.g. `boslogin` or `holylogin02` you will need to enter your password & 2FA token
 
 ## Advanced Configuration
 
@@ -77,7 +77,7 @@ E.g. `ssh`, `rsync`, `scp`, etc.
 
 ## Troubleshooting
 
-* If ssh doesn't work after creating/modifying the ssh config, try restarting the ssh service. Run:
+* If SSH doesn't work after creating/modifying the SSH config, try restarting the SSH service. Run:
 ```bash
 sudo launchctl stop com.openssh.sshd
 ```
@@ -86,15 +86,15 @@ sudo launchctl stop com.openssh.sshd
 
 # Uninstallation
 
-1. Run the following command to remove passwords, aliases, and ssh config sections set by this app
+1. Run the following command to remove passwords, aliases, and SSH config sections set by this app
 
     ```bash
-    ./scripts/install
+    ./scripts/uninstall
     ```
 
-2. Remove the conad environment:
+2. Remove the conda environment:
 
-    If the `totp` environmetn is currently asctive, run:
+    If the `totp` environment is currently active, run:
 
     ```bash
     conda deactivate

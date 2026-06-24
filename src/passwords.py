@@ -95,7 +95,7 @@ def prompt_and_store_passwords(override_username=None):
     else:
         ### SSH USERNAME
         user_input_ssh_uname = getpass.getpass(
-            "Enter you username on the fasrc server (will be stored locally and encrypted in keyring): "
+            "Enter your username on the FASRC server (will be stored locally and encrypted in keyring): "
         )
 
         if len(user_input_ssh_uname) < 3:
@@ -105,7 +105,7 @@ def prompt_and_store_passwords(override_username=None):
 
     ### FASRC USER PASSWORD
     user_input_pass = getpass.getpass(
-        "Enter your fasrc password (will be stored locally and encrypted in keyring): "
+        "Enter your FASRC password (will be stored locally and encrypted in keyring): "
     )
 
     if len(user_input_pass) < 10:
@@ -179,7 +179,7 @@ def remove_passwords():
 
 
 def are_all_passwords_set():
-    """Check if all passwords are set. Return TRUE if any password is not set"""
+    """Check if all passwords are set. Return True if all passwords are set."""
     attempts = [
         get_totp_code() is not None,
         get_rc_password() is not None,
